@@ -26,5 +26,5 @@ dependencies {
     // Transitively pulls log4j-core 2.14.1 (CVE-2021-44228) — what the trivy
     // report flags. demo-lib 2.0.0 is also published in JFrog with log4j-core
     // 2.17.1 as a known-safe upgrade target for Backline's planning step.
-    implementation 'com.backline.test:demo-lib:1.0.0'
+    implementation 'com.backline.test:demo-lib:2.0.0'
 }
