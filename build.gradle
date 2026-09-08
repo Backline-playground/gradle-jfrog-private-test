@@ -1,14 +1,15 @@
 // BKLN-2092 end-to-end test (Gradle counterpart of maven-jfrog-private-test).
 //
-// No `repositories { ... }` block here on purpose: Backline's runner injects
-// $HOME/.gradle/init.gradle at job-start time, which adds the customer's
-// configured JFrog Maven-layout repo to `allprojects.repositories` with a
-// Bearer-auth httpHeaderCredentials block. That's how the resolver fetches
-// `com.backline.test:demo-lib:1.0.0` from the private maven-test virtual repo.
+// The JFrog maven-test virtual repo is the only repository declared here. It
+// serves `com.backline.test:demo-lib` and proxies Maven Central for everything
+// else, so nothing in this build resolves without reaching it.
 //
-// For local development outside Backline, configure your own
-// $HOME/.gradle/init.gradle (or pass `--init-script <path>`) pointing at the
-// same registry — see README.
+// No credentials in this file: Backline's runner injects
+// $HOME/.gradle/init.gradle at job-start time, which attaches the tenant's
+// configured credentials to every repository on this host.
+//
+// For local development outside Backline, put those credentials in your own
+// $HOME/.gradle/init.gradle (or pass `--init-script <path>`) — see README.
 
 plugins {
     id 'java'
@@ -16,6 +17,12 @@ plugins {
 
 group = 'com.backline.test'
 version = '1.0.0'
+
+repositories {
+    maven {
+        url = uri('https://backlineai.jfrog.io/artifactory/maven-test/')
+    }
+}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
